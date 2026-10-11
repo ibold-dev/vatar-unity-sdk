@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate package metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate JSON files
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('Packages/com.vatar.games/package.json')); JSON.parse(require('fs').readFileSync('Packages/com.vatar.games/Runtime/Vatar.Games.asmdef')); JSON.parse(require('fs').readFileSync('Packages/com.vatar.games/Tests/Runtime/Vatar.Games.Tests.asmdef')); JSON.parse(require('fs').readFileSync('Tests/UnityProject/Packages/manifest.json'))"
+      - name: Verify package archive can be created
+        working-directory: Packages/com.vatar.games
+        run: npm pack --dry-run
+
+  secret-scan:
+    name: Scan for exposed credentials
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  unity-editmode:
+    name: Unity EditMode tests
+    needs: validate
+    if: ${{ vars.RUN_UNITY_TESTS == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          unityVersion: 2021.3.45f1
+          projectPath: Tests/UnityProject
+          testMode: EditMode
+          artifactsPath: artifacts/test-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unity-editmode-results
+          path: artifacts/test-results
+          if-no-files-found: ignore

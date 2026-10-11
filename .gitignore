@@ -12,6 +12,7 @@
 # Unity package distribution and local test artifacts
 *.unitypackage
 *.tgz
+dist/
 TestResults/
 CoverageResults/
 

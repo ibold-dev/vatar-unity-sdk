@@ -1,0 +1,33 @@
+name: Release package
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Package and publish GitHub release
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verify tag matches package version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          node -e "const version = require('./Packages/com.vatar.games/package.json').version; if ('v' + version !== process.env.TAG) process.exitCode = 1"
+      - name: Create package archive
+        run: |
+          mkdir dist
+          npm pack ./Packages/com.vatar.games --pack-destination dist
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release create "$TAG" dist/*.tgz --generate-notes --verify-tag
