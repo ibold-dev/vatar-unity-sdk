@@ -2,6 +2,8 @@
 
 The Vatar Games Unity SDK integrates Unity WebGL games with the Vatar Games browser SDK. It exposes player identity, session tokens, purchases, leaderboards, lifecycle events, and multiplayer matches through a typed C# API.
 
+> **Community project — not an official Unity SDK.** This independent package is built on top of Vatar's official JavaScript SDK. It is not developed, endorsed, or supported as an official Unity SDK by Vatar or Lagos Life. For platform-level support, use the official [Vatar Games documentation](https://lagoslife.app/developers/docs) and support channels.
+
 ## Status
 
 The repository is being prepared for its first production release. Until a stable release is tagged, consume it from a pinned Git commit and validate in the Vatar sandbox.
