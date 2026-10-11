@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -26,12 +27,16 @@ jobs:
 
   secret-scan:
     name: Scan for exposed credentials
+    # The Gitleaks action derives a revision range from push.before. On the
+    # initial remote push that value has no parent, so defer history scanning
+    # to the next push or a manual dispatch instead of reporting a false CI failure.
+    if: ${{ github.event_name != 'push' || github.event.before != '0000000000000000000000000000000000000000' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
+      - uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
