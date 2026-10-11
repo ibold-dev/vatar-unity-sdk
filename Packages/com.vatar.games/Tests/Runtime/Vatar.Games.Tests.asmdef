@@ -1,0 +1,20 @@
+{
+  "name": "Vatar.Games.Tests",
+  "rootNamespace": "Vatar.Games.Tests",
+  "references": [
+    "Vatar.Games"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll"
+  ],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

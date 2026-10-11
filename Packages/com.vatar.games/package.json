@@ -1,0 +1,19 @@
+{
+  "name": "com.vatar.games",
+  "displayName": "Vatar Games",
+  "version": "0.1.0-pre.0",
+  "unity": "2021.3",
+  "description": "Unity WebGL bridge for the Vatar Games SDK.",
+  "keywords": [
+    "vatar",
+    "lagos-life",
+    "webgl",
+    "games"
+  ],
+  "category": "Integration",
+  "author": {
+    "name": "Vatar Games",
+    "url": "https://lagoslife.app/developers/docs"
+  },
+  "dependencies": {}
+}
